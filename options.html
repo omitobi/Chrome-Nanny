@@ -1,9 +1,9 @@
 <html>
 	<head>
 		<title>Chrome Nanny : Options </title>
-		<link href="css/jquery-ui.custom.css" rel="stylesheet" type="text/css"> 
-		<link href="css/jquery.jqplot.css" rel="stylesheet" type="text/css"> 
-		<link href="css/beProductive.css" rel="stylesheet" type="text/css"> 
+		<link href="css/jquery-ui.custom.css" rel="stylesheet" type="text/css">
+		<link href="css/jquery.jqplot.css" rel="stylesheet" type="text/css">
+		<link href="css/beProductive.css" rel="stylesheet" type="text/css">
 
 		<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.custom.min.js"></script>
@@ -18,29 +18,15 @@
 		<script type="text/javascript" src="js/statCharts.js"></script>
 		<script type="text/javascript" src="js/options.js"></script>
 
-		<script type="text/javascript">
-			var isIntervalSet = false;
-			var optionIntervalTimerId = "";
-			$(function() {
-				//done to get stats that are updated until NOW !
-				chrome.extension.getBackgroundPage().BackGroundManager.storeStats();
-				$("#tabs").tabs();
-				populateBlockSets();
-				populateWhiteListedUrls();
-				populateTags();
-				populateGenOptions();
-				populateLockDown();
-				setupDatePickers();
-				setupAllDialogs();
-			});
-		</script>
+		<script type="text/javascript" src="js/stats.js"></script>
+		<script type="text/javascript" src="js/optionsActions.js"></script>
 	</head>
 
 	<body>
 		<div id='challengeDiv' style="display:none;">
 			<input type='hidden' id='dialogBlockSet' />
 			<input type='hidden' id='editOrDeleteBlockSet' />
-			
+
 			<!-- really cool way to disallow select - check the css for details ! -->
 			<input type='text' readonly='true' id='origText' size='150' value='' class="no-select"/>
 			<br/>
@@ -48,11 +34,11 @@
 			<br/>
 			<input type='text' id='userEnteredText' size='150' value='' />
 		</div>
-		
-		<!-- 
-			Chrome behaves erratically when using alert and confirm in extensions - this div is an attempt to override 
+
+		<!--
+			Chrome behaves erratically when using alert and confirm in extensions - this div is an attempt to override
 				it using jquery dialogs. So fill the confirmMessage with any text used for confirmation.
-		-->	
+		-->
 		<div id='confirmMessageDiv' style="display:none;">
 			<input type='hidden' id='operationToPerform' />
 			<input type='hidden' id='operandVal' />
@@ -60,7 +46,7 @@
 			<br/>
 		</div>
 
-		<div id="tabs"> 
+		<div id="tabs">
 			<ul>
 				<li><a href="#tabs-1">Blocked URLs</a></li>
 				<li><a href="#tabs-2">Whitelisted URLs</a></li>
@@ -73,7 +59,7 @@
 			</ul>
 
 			<div id="tabs-1">
-				<div id="blockedURLsBody" class="section_body"> 
+				<div id="blockedURLsBody" class="section_body">
 					<table border=0 nowrap cellspacing ='0' cellpadding='0' class='ModuleSection' align='center' width='100%'>
 						<tr class='tDataGridHeader' >
 							<td colspan="2">Details Of URLs To Block</td>
@@ -102,7 +88,7 @@
 						</tr>
 						<tr class='tDataGridElement'>
 							<td>
-					Max Time : 
+					Max Time :
 							</td>
 							<td>
 					<input type ="text" class='GeneralTextBox' id="maxTimeADay" name="maxTimeADay" maxlength="4" size="4"/> minutes for every
@@ -122,18 +108,18 @@
 					Apply On Days *
 							</td>
 							<td>
-					<input type="checkbox" id="sun" name="sun" checked> Sunday 
+					<input type="checkbox" id="sun" name="sun" checked> Sunday
 					<input type="checkbox" id="mon" name="mon" checked> Monday
-					<input type="checkbox" id="tue" name="tue" checked> Tuesday 
-					<input type="checkbox" id="wed" name="wed" checked> Wednesday 
-					<input type="checkbox" id="thu" name="thu" checked> Thursday 
+					<input type="checkbox" id="tue" name="tue" checked> Tuesday
+					<input type="checkbox" id="wed" name="wed" checked> Wednesday
+					<input type="checkbox" id="thu" name="thu" checked> Thursday
 					<input type="checkbox" id="fri" name="fri" checked> Friday
-					<input type="checkbox" id="sat" name="sat" checked> Saturday 
+					<input type="checkbox" id="sat" name="sat" checked> Saturday
 							</td>
 						</tr>
 						<tr>
 							<td>
-							Tags 
+							Tags
 							</td>
 							<td>
 								<select class='GeneralSelectBox' id='blockListAllTags'></select>
@@ -143,33 +129,33 @@
 						</tr>
 						<tr>
 							<td>
-							Added Tags 
+							Added Tags
 							</td>
 							<td>
 								<ul id='blockListTagsUl'></ul>
 							</td>
 						</tr>
 					</table>
-					<input type="button" class='GeneralButton' id="addToBlockList" name="addToBlockList" onclick ="javascript:addBlockSet();" value="Save URL"/>
-					<input type='button' class='GeneralButton' id='clearBlockListTags' onclick="javascript:clearBlockListUrlTags();" value="Clear Tags" />
-					<input type='button' class='GeneralButton' id='clearBlockList' onclick="javascript:clearBlockListBlock();" value="Clear All Fields" />
+					<input type="button" class='GeneralButton' id="addToBlockList" name="addToBlockList" value="Save URL"/>
+					<input type='button' class='GeneralButton' id='clearBlockListTags' value="Clear Tags" />
+					<input type='button' class='GeneralButton' id='clearBlockList' value="Clear All Fields" />
 				</div>
 				<p/>
 				<p/>
-				
+
 				<table id='allBlockSetsTbl' border=0 nowrap cellspacing ='0' cellpadding='0' class='ModuleSection' align='center' width='100%'>
 					<tr class='tDataGridHeader' >
 						<td colspan="2">Block Sets</td>
 					</tr>
 				</table>
 
-				
+
 			</div>
 
 
 
 			<div id="tabs-2">
-				<div id="whiteListedURLBody" class="section_body"> 
+				<div id="whiteListedURLBody" class="section_body">
 					<table border=0 nowrap cellspacing ='0' cellpadding='0' class='ModuleSection' align='center' width='100%' >
 						<tr class='tDataGridHeader'>
 							<td colspan="3">Details Of White Listed URL</td>
@@ -179,7 +165,7 @@
 							<td>
 								<input type = "textbox" id="whiteListedURL" size="75" maxLength = "100" />
 								<select class='GeneralSelectBox' id='whiteListAllTags'></select>
-								<input type='button' class='GeneralButton' id='addTagToWhiteList' onclick='javascript:addTagToWhiteListDiv();' value = 'Add Tag' />
+								<input type='button' class='GeneralButton' id='addTagToWhiteList' value = 'Add Tag' />
 							</td>
 						</tr>
 						<tr class='tDataGridElement'>
@@ -191,9 +177,9 @@
 							</td>
 						</tr>
 					</table>
-					<input type='button' class='GeneralButton' id='addToWhiteList' onclick="javascript:addUrlToWhiteList();" value="Save URL" />
-					<input type='button' class='GeneralButton' id='clearWhiteListTags' onclick="javascript:clearWhiteListUrlTags();" value="Clear Tags" />
-					<input type='button' class='GeneralButton' id='clearWhiteList' onclick="javascript:clearWhiteListBlock();" value="Clear All Fields" />
+					<input type='button' class='GeneralButton' id='addToWhiteList' value="Save URL" />
+					<input type='button' class='GeneralButton' id='clearWhiteListTags' value="Clear Tags" />
+					<input type='button' class='GeneralButton' id='clearWhiteList' value="Clear All Fields" />
 				</div>
 				<p/>
 				<p/>
@@ -207,7 +193,7 @@
 
 
 			<div id="tabs-3">
-				<div id="tagsBody" class="section_body"> 
+				<div id="tagsBody" class="section_body">
 					<table border=0 nowrap cellspacing ='0' cellpadding='0' class='ModuleSection' align='center' width='100%' >
 						<tr class='tDataGridHeader'>
 							<td>Tag </td>
@@ -230,14 +216,14 @@
 
 
 			<div id="tabs-4">
-				<div id="genOptionsBody" class="section_body"> 
+				<div id="genOptionsBody" class="section_body">
 					<table border=0 nowrap cellspacing ='0' cellpadding='0' class='ModuleSection' align='center' width='100%' >
 						<tr class='tDataGridHeader'>
 							<td colspan="3">General Options</td>
 						</tr>
 						<tr class='tDataGridElement'>
 							<td>
-								<label for="modeOfBlocking">Mode Of Blocking </label> 
+								<label for="modeOfBlocking">Mode Of Blocking </label>
 								<input type='radio' name='modeOfBlocking' id='remove' value='remove' checked>Close Tab
 								<input type='radio' name='modeOfBlocking' id='showblocked' value='showblocked'>Show &quot;Site blocked&quot; page
 								<input type='radio' name='modeOfBlocking' id='redirect' value='redirect'>Redirect To URL
@@ -246,20 +232,20 @@
 						</tr>
 						<tr class='tDataGridElement'>
 							<td>
-								Stop Timer after Chrome is inactive for 
+								Stop Timer after Chrome is inactive for
 								<input type='text' id='maxInActiveTimer' maxlength='3' size='5' /> minutes.
 							</td>
 						</tr>
 						<tr class='tDataGridElement'>
 							<td>
-								Maximum Allowed minutes in a day for Blocked URLs : 
+								Maximum Allowed minutes in a day for Blocked URLs :
 								<input type='text' id='maxMinutesForBlockedUrls' maxlength='3' size='5' /> minutes.
 								<i>(If set to 0 , then the individual Blocked URL limits are used. See "Instructions" for more details) </i>
 							</td>
 						</tr>
 						<tr class='tDataGridElement'>
 							<td>
-								Length Of Challenge Text : 	
+								Length Of Challenge Text :
 								<select id='challengeLen' name='challengeLen' class='GeneralSelectBox' >
 									<option value='128'>128</option>
 									<option value='64'>64</option>
@@ -272,25 +258,25 @@
 						</tr>
 						<tr class='tDataGridElement'>
 							<td>
-								<label for="showBlockedURLs">Show blocked URLs in popup ?</label> 
+								<label for="showBlockedURLs">Show blocked URLs in popup ?</label>
 								<input type='radio' name='showBlockedURLs' id='showURLs' value='showURLs' checked> Yes
 								<input type='radio' name='showBlockedURLs' id='doNotShowURLs' value='doNotShowURLs'> No .
 								<i>(If 'Yes' is selected then clicking on 'Chrome Nanny' icon shows details about blocked and whitelisted URLs like time remaining)</i>
 							</td>
 						</tr>
 					</table>
-				
+
 					<input type='button' class='GeneralButton' id='saveGenOptions' onclick="javascript:saveGeneralOptions();" value="Save General Options" />
 				</div>
 			</div>
-			
+
 			<div id="tabs-5">
-				<div id="lockdownInfo" class="section_body"> 
+				<div id="lockdownInfo" class="section_body">
 					<table border=0 nowrap cellspacing ='0' cellpadding='0' class='ModuleSection' align='center' width='100%' >
 						<tr class='tDataGridHeader'>
 							<td>LockDown Information &nbsp;
 							&nbsp;<input type='button' class='GeneralButton' id='refreshLockDownDtlsBtn' onclick='javascript:refreshLockDownDtls();' value = 'Refresh' />
-								
+
 							</td>
 						</tr>
 						<tr class='tDataGridElement'>
@@ -314,26 +300,26 @@
 					</tr>
 
 					<tr class='tDataGridElement'>
-					<td> 
-						<b>Duration:</b>&nbsp; <select id='lockDownHrs'></select> Hours <select id='lockDownMins'></select>minutes.  &nbsp; 
+					<td>
+						<b>Duration:</b>&nbsp; <select id='lockDownHrs'></select> Hours <select id='lockDownMins'></select>minutes.  &nbsp;
 						<input type='button' class='GeneralButton' id='beginLockDownBtn' onclick='javascript:beginLockDown();' value = 'Begin LockDown' />
 					</td>
 					</tr>
 
-					
+
 				</table>
 
 			</div>
 
 			<div id="tabs-6">
-				<div id="validateRegExpBody" class="section_body"> 
+				<div id="validateRegExpBody" class="section_body">
 					<table border=0 nowrap cellspacing ='0' cellpadding='0' class='ModuleSection' align='center' width='100%' >
 						<tr class='tDataGridHeader'>
 							<td colspan="3">Validate Regular Expressions</td>
 						</tr>
 						<tr class='tDataGridElement'>
 							<td width='20%'>
-								<label for="modeOfBlocking">Regular Expression for URL *</label> 
+								<label for="modeOfBlocking">Regular Expression for URL *</label>
 							</td>
 							<td>
 								<input type='text' id='regExpUrl' name='regExpUrl' size='75' maxlength='150' />
@@ -342,15 +328,15 @@
 						</tr>
 						<tr class='tDataGridElement'>
 							<td width='20%'>
-								<label for="urlToTest">Test URL</label> 
+								<label for="urlToTest">Test URL</label>
 							</td>
 							<td>
-								<input type='text' id='urlToTest' name='urlToTest' maxlength='150' size='75' /> 
+								<input type='text' id='urlToTest' name='urlToTest' maxlength='150' size='75' />
 								(Eg : google.com)
 							</td>
 						</tr>
 					</table>
-				
+
 					<input type='button' class='GeneralButton' id='validateRegExpBtn' onclick="javascript:validateRegExp();" value="Test Regular Expression" />
 					<input type='button' class='GeneralButton' id='resetRegExpFldsBtn' onclick="javascript:resetRegExpFlds();" value="Reset RegExp Fields" />
 
@@ -371,7 +357,7 @@
 					</tr>
 
 				</table>
-				
+
 				<p/>
 				<p/>
 
@@ -383,7 +369,7 @@
 					<tr>
 						<td width='20%'>google.*</td>
 						<td>
-							Matches google.com , google.co.in, google.com/reader , picasaweb.google.com 
+							Matches google.com , google.co.in, google.com/reader , picasaweb.google.com
 							<br/>
 							Does not match any URL that does not have the word google in it.
 							<p/>
@@ -422,43 +408,43 @@
 
 
 			<div id="tabs-7">
-				<div id="statsBody" class="section_body"> 
+				<div id="statsBody" class="section_body">
 					<table border=0 nowrap cellspacing ='0' cellpadding='0' class='ModuleSection' align='center' width='100%' >
 						<tr class='tDataGridHeader'>
 							<td colspan="3">Statistics</td>
 						</tr>
 						<tr class='tDataGridElement'>
 							<td>
-								<label for="from">From</label> 
-								<input type="text" id="from" name="from"/> 
-								<label for="to">To</label> 
-								<input type="text" id="to" name="to"/> 	
+								<label for="from">From</label>
+								<input type="text" id="from" name="from"/>
+								<label for="to">To</label>
+								<input type="text" id="to" name="to"/>
 							</td>
 						</tr>
 						<tr class='tDataGridElement'>
 							<td>
-								<label for="chartType">Chart Type :</label> 
+								<label for="chartType">Chart Type :</label>
 								<input type='radio' name='chartType' id='barChartRadio' value='B' checked>Bar Chart
 								<input type='radio' name='chartType' id='pieChartRadio' value='P'>Pie Chart
 							</td>
 						</tr>
 					</table>
-					<input type="button" class='GeneralButton' id="calcCharts" name="calcCharts" onclick='javascript:plotCharts();' value='Plot !' /> 
+					<input type="button" class='GeneralButton' id="calcCharts" name="calcCharts" onclick='javascript:plotCharts();' value='Plot !' />
 				</div>
 				<div>
 					<div class="jqPlot" id="blockListChartSpace" style="height:50px; width:640px;"></div>
 					<div class="jqPlot" id="blockListChart" style="height:480px; width:640px;margin-left:auto;margin-right:auto;"></div>
 					<div class="jqPlot" id="blockSetChartSpace" style="height:50px; width:640px;"></div>
-					<div class="jqPlot" id="blockSetChart" style="height:480px; width:640px;margin-left:auto;margin-right:auto;"></div> 
+					<div class="jqPlot" id="blockSetChart" style="height:480px; width:640px;margin-left:auto;margin-right:auto;"></div>
 					<div class="jqPlot" id="whiteListChartSpace" style="height:50px; width:640px;"></div>
-					<div class="jqPlot" id="whiteListChart" style="height:480px; width:640px;margin-left:auto;margin-right:auto;"></div> 
+					<div class="jqPlot" id="whiteListChart" style="height:480px; width:640px;margin-left:auto;margin-right:auto;"></div>
 					<div class="jqPlot" id="tagChartSpace" style="height:50px; width:640px;"></div>
 					<div class="jqPlot" id="tagChart" style="height:480px; width:640px;margin-left:auto;margin-right:auto;" ></div>
 				</div>
 			</div>
 
 			<div id="tabs-8">
-				<div id="instructionsBody" class="section_body"> 
+				<div id="instructionsBody" class="section_body">
 
 						<b>Chrome Nanny is developed by <a href='http://saravananthirumuruganathan.wordpress.com/' target='_blank'>Saravanan Thirumuruganathan</a>. Please visit the post <a href='http://saravananthirumuruganathan.wordpress.com/2010/05/05/instructions-for-chrome-nanny-a-leech-block-like-extension-for-chrome/' target='_blank'>Instructions For Chrome Nanny</a> for up to date and additional information. For the features planned in future checkout the <a href='http://saravananthirumuruganathan.wordpress.com/2010/08/05/chrome-nanny-road-map/' target='_blank'>Chrome Nanny's Roadmap.</a></b> <p/>
 
@@ -573,17 +559,17 @@ By default, Chrome Nanny will show the URLs currently blocked, how much time lef
 <b>15. I think I have found a new bug ! Or How do I troubleshoot Chrome Nanny ?</b><br/>
 I have tested Chrome Nanny extensively but bugs do creep up. Please check if you can reproduce the error consistently. If so, please point out the bug and  the steps to reproduce in any of the following ways : comment at  <a href='https://chrome.google.com/extensions/detail/gpdgmmdbbbchchonpfanphofpplhmcmn'>Chrome Nanny's extension page</a>  OR comment in <a href='http://saravananthirumuruganathan.wordpress.com/2010/05/05/instructions-for-chrome-nanny-a-leech-block-like-extension-for-chrome/'>Chrome Nanny's instructions blog post</a> OR email the developer at saravanan DOT thirumuruganathan AT gmail DOT com . It would be great if you can email the settings of Chrome Nanny also. Easiest way is to email the file chrome-extension_gpdgmmdbbbchchonpfanphofpplhmcmn_0.localstorage at ~/.config/google-chrome/Default/Local Storage (If using Linux and Chrome) or ~/.config/google-chrome/Default/Local Storage (using Linux and Chromium) or at C:\Users\<username>\AppData\Local\Google\Chrome\User Data\Default\Local Storage (In Windows) . <p/>
 
-Optionally you can also give me the logs when the bug occurs. To get Chrome Nanny's logs , click on the Wrench icon - Select Extensions. Go to Chrome Nanny and click on "background.html" . This will open Chrome's developer tools.  Now try reproducing the bug and copy the log it generates. This will be very helpful for additional debugging. 
+Optionally you can also give me the logs when the bug occurs. To get Chrome Nanny's logs , click on the Wrench icon - Select Extensions. Go to Chrome Nanny and click on "background.html" . This will open Chrome's developer tools.  Now try reproducing the bug and copy the log it generates. This will be very helpful for additional debugging.
 <p/>
 
 <b>16. I have a patch for feature X . How do I send it to you ? </b><p/>
-It is wonderful that you took time to write a patch. Please send an email to saravananDOTthirumuruganathanATgmailDOTcom with the patch details and the file. I will test it and apply it to the extension. The latest code of Chrome Nanny will can be downloaded from the repository <b><a href='https://code.google.com/p/saravanant/source/browse/trunk/chrome/ChromeNanny/chromeNanny_src.zip'>here</a></b> . If you need additional help on the code please take a look at my post <b><a href='http://saravananthirumuruganathan.wordpress.com/2010/05/01/how-to-read-the-source-code-of-chrome-and-firefox-extensions/'>"How to Read the Source Code of Chrome and Firefox Extensions" . </a></b> 
+It is wonderful that you took time to write a patch. Please send an email to saravananDOTthirumuruganathanATgmailDOTcom with the patch details and the file. I will test it and apply it to the extension. The latest code of Chrome Nanny will can be downloaded from the repository <b><a href='https://code.google.com/p/saravanant/source/browse/trunk/chrome/ChromeNanny/chromeNanny_src.zip'>here</a></b> . If you need additional help on the code please take a look at my post <b><a href='http://saravananthirumuruganathan.wordpress.com/2010/05/01/how-to-read-the-source-code-of-chrome-and-firefox-extensions/'>"How to Read the Source Code of Chrome and Firefox Extensions" . </a></b>
 
 <p/>
 
 <h2 align='center'>Instructions</h2>
-					
-					<h3>General Options : </h3> 
+
+					<h3>General Options : </h3>
 					<b>Mode Of Blocking</b> decides what to do if you are visiting a website during blocked hours or after exhausting all the time you allocated yourself for the site. The default option is to <i>remove</i> the tab which may not be ideal for you. If you want the tab to be redirected to some motivational sites then you can select the <i>redirect</i> option and give a redirect url. You can specify a web page or a local html page (using file:// prefix)  Note that if you have only one tab, mode of block is"remove" and the url is blocked now, the entire window will be closed. <br/>
 
 
@@ -591,7 +577,7 @@ It is wonderful that you took time to write a patch. Please send an email to sar
 
 					<b>Maximum Allowed minutes in a day for Blocked URLs</b> - Use this field if you want to set a single limit to the time you spend on Blocked URLs. This value will override the individual Blocked URL limits. As an example , lets say you added facebook.com to Blocked URL list and set <i>Max Time In a day</i> as 60 minutes. If you now set, <i>Maximum Allowed minutes in a day for Blocked URLs</i> as 30 minutes, then facebook.com will not be accessible after 30 minutes . The same holds when you have multiple Blocked URLs. If the sum of time spent on all the URLs exceed this field, then <b>all</b> Blocked URLs will be blocked.
 					<br/>
-					<b>Length Of Challenge Text </b> - This determines the length of the Challenge text that Chrome Nanny will ask if you try to edit/delete a blockset when it is currently blocked. Reducing this field will also decrease the length of the challenge text. This field was added because in "some" scenarios (eg when playing with Chrome Nanny) , Challenges are an annoyance. Please use this field with discretion. To make changing this field a little hard to use, when you reduce the length of the Challenge, Chrome Nanny will perform a Challenge. So if you try to reduce a 64 character challenge to 32 character, you will be challenged with a 64 character random string before being allowed to change it. Making the length as 0, removes all challenges. 
+					<b>Length Of Challenge Text </b> - This determines the length of the Challenge text that Chrome Nanny will ask if you try to edit/delete a blockset when it is currently blocked. Reducing this field will also decrease the length of the challenge text. This field was added because in "some" scenarios (eg when playing with Chrome Nanny) , Challenges are an annoyance. Please use this field with discretion. To make changing this field a little hard to use, when you reduce the length of the Challenge, Chrome Nanny will perform a Challenge. So if you try to reduce a 64 character challenge to 32 character, you will be challenged with a 64 character random string before being allowed to change it. Making the length as 0, removes all challenges.
 					<br/>
 
 
@@ -620,7 +606,7 @@ It is wonderful that you took time to write a patch. Please send an email to sar
 					<p/>
 
 
-					<h3>White Listed URLs</h3> 
+					<h3>White Listed URLs</h3>
 					If you do not want to block a URL but want to find how much time you spend each day, then use the White Listed URLs tab. Any URL added here is not blocked, but will be tracked and can be charted. <br/>
 
 					<b>URL : </b> Enter the URL of the site you want to be tracked. Again, you can enter just the domain name to track any page in the site. <br/>
@@ -628,15 +614,15 @@ It is wonderful that you took time to write a patch. Please send an email to sar
 
 					<p/>
 
-					<h3>Statistics </h3> 
+					<h3>Statistics </h3>
 					If you want to visualize how you spent your days with respect to the URLs you entered in Chrome Nanny, then this is the tab for you. You can enter the date range and Chrome Nanny will give you four charts. One each for Blocked URLs, Block Sets, White Listed URLs and tags. You can select between Bar Chart and Pie Chart !. <br/>
 
-					
-					<h3>Validate Regular Expression</h3> 
+
+					<h3>Validate Regular Expression</h3>
 					If you are going to use a regular expression in the URL, then you can use this tab to validate it. A bad regexp can cause syntax error in the code and *might* cause Chrome Nanny not to block other URLs.  <p>
 
 					<b>Validating a Regular Expression :  </b> Enter your regexp in "Regular Expression for URL" and click "Test Regular Expression". Check the field "RegExp Error". If there is any error in regexp, it will be displayed here.  <br/>
-					<b>Verify if an URL is blocked : </b> Enter the regexp in "Regular Expression for URL" . Enter URL to be tested in "Test URL". Click "Test Regular Expression". Check the fields "RegExp Error" and "Match". 
+					<b>Verify if an URL is blocked : </b> Enter the regexp in "Regular Expression for URL" . Enter URL to be tested in "Test URL". Click "Test Regular Expression". Check the fields "RegExp Error" and "Match".
 
 				</div>
 			</div>

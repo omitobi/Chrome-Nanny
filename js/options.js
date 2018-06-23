@@ -19,7 +19,7 @@ function addBlockSet()
 {
 	if(!validateBlockSet())
 		return false;
-	
+
 	var urls = $.trim($("#URLToBeBlocked").val()).split("\n");
 	urls = removeElementFromArray(null,urls);
 	urls = removeElementFromArray("",urls);
@@ -52,7 +52,7 @@ function addBlockSet()
 	var tags =  getAllLiInUl("#blockListTagsUl")
 	storeBlockSet(blockSetDtls,tags);
 	clearBlockListBlock();
-	populateBlockSets();	
+	populateBlockSets();
 }
 
 function isValidMaxTime(maxTimeADay, maxTimeUnit)
@@ -76,9 +76,9 @@ function validateBlockSet()
 
 	//not checking if the url is a valid RFC 1738 as we "can" accept a regexp.
 	// 	the problem is that i cannot find a way to "reliably" validate a regexp.
-	// 	compiling a bad regexp gives syntax error and not null as output 
+	// 	compiling a bad regexp gives syntax error and not null as output
 	// 	so not doing anything as of now for validating url --sara
-	
+
 	if($("#blockSetName").val() == "")
 	{
 		alert('Please enter the name of the Block Set');
@@ -92,8 +92,8 @@ function validateBlockSet()
 		alert('Please enter list of valid URLs to block');
 		$("#URLToBeBlocked").focus();
 		return false;
-	}	
-	
+	}
+
 
 	var timeBlock = $("#timeToBeBlocked").val() ;
 
@@ -102,14 +102,14 @@ function validateBlockSet()
 		alert('Please enter a valid Time to Block ');
 		$("#timeToBeBlocked").focus();
 		return false;
-	}	
+	}
 	if(!isValidTimeBlock(timeBlock))
 	{
 		alert('Please a valid time block of the format hhmm-hhmm[,hhmm-hhmm]* ');
 		$("#timeToBeBlocked").focus();
 		return false;
 	}
-	
+
 	var maxTimeADay = $("#maxTimeADay").val();
 	var maxTimeUnit = $("#maxTimeUnit").val();
 	if(maxTimeADay != "") //this is a optional field.
@@ -120,7 +120,7 @@ function validateBlockSet()
 			return false;
 		}
 	}
-	
+
 	if($('#blockedURLsBody input:checked').length == 0)
 	{
 		alert('You cannot slack off all week ! Please select the days on which the URL has to be blocked !');
@@ -139,11 +139,11 @@ function getArrayOfWeekDayElems()
 
 function getActiveDays()
 {
-	var weekDayElems= getArrayOfWeekDayElems(); 
+	var weekDayElems= getArrayOfWeekDayElems();
 	var isNoDaysSelected = true;
 	var index = 0 ;
 	var daysSelected = Array();
-	
+
 	$.each(weekDayElems,function(k,v){if($(v).is(":checked")) daysSelected.push(k)});
 	return daysSelected.join(",");
 }
@@ -245,7 +245,7 @@ function editBlockListedUrl(blockSetName)
 		alert('A lockdown is active for this blockset. It can be modified/removed only after it is over');
 		return ;
 	}
-	
+
 	if(chrome.extension.getBackgroundPage().BackGroundManager.checkIfBlockSetShudBeBlockedNOW(blockSetName))
 		challengeUser(blockSetName,'E');
 	else
@@ -254,12 +254,12 @@ function editBlockListedUrl(blockSetName)
 
 function sortBlockSetsBasedOnName(blockSetNameA,blockSetNameB)
 {
-	var aDtls = getBlockSetDtls(blockSetNameA); 
-	var bDtls = getBlockSetDtls(blockSetNameB); 
-	var aName = aDtls.name.toUpperCase(); 
-	var bName = bDtls.name.toUpperCase();; 
-	if(aName < bName) return -1; 
-	if(aName > bName) return 1; 
+	var aDtls = getBlockSetDtls(blockSetNameA);
+	var bDtls = getBlockSetDtls(blockSetNameB);
+	var aName = aDtls.name.toUpperCase();
+	var bName = bDtls.name.toUpperCase();;
+	if(aName < bName) return -1;
+	if(aName > bName) return 1;
 	return 0;
 }
 
@@ -309,7 +309,7 @@ function clearBlockListUrlTags()
 
 function addTagToBlockListDiv()
 {
-	var tagName = $('#blockListAllTags').val();	
+	var tagName = $('#blockListAllTags').val();
 	if(tagName == null)
 	{
 		alert('Please retry after adding new tags in the Tags tab');
@@ -367,7 +367,7 @@ function populateWhiteListedUrls()
 
 	chrome.extension.getBackgroundPage().BackGroundManager.setWhiteList(allWhiteListedUrls);
 	clearWhiteListBlock();
-	$("#allWhiteListedURLsTbl").find("tr:gt(0)").remove();	
+	$("#allWhiteListedURLsTbl").find("tr:gt(0)").remove();
 	for (var index in allWhiteListedUrls)
 	{
 		url = allWhiteListedUrls[index];
@@ -376,7 +376,7 @@ function populateWhiteListedUrls()
 			tagStr = "&nbsp; &nbsp; Tagged : <i>" + allTagsForUrl.join(",") + "</i>";
 		editStr =  "&nbsp;&nbsp;<a href='javascript:editWhiteListedUrl(\"" + url + "\")';><img src='images/edit.gif'/></a>";
 		deleteStr = "&nbsp;&nbsp;<a href='javascript:removeWhiteListedUrl(\"" + url + "\")';><img src='images/delete.gif'/></a>";
-		dtlsStr = url + tagStr + editStr + deleteStr; 
+		dtlsStr = url + tagStr + editStr + deleteStr;
 		$("#allWhiteListedURLsTbl").append("<tr class='tDataGridElement'><td>" + dtlsStr + "<p/></td></tr>");
 	}
 }
@@ -429,7 +429,7 @@ function populateGenOptions()
 	$("#showblocked").attr("checked", genOptions.modeOfBlocking == "showblocked");
 	$("#redirect").attr("checked", genOptions.modeOfBlocking == "redirect");
 	$("#redirectUrl").attr("disabled", genOptions.modeOfBlocking != "redirect");
-	$("#redirectUrl").val(genOptions.redirectUrl); 
+	$("#redirectUrl").val(genOptions.redirectUrl);
 	$("#maxInActiveTimer").val(genOptions.maxInActiveTimer);
 	$("#maxMinutesForBlockedUrls").val(genOptions.maxMinutesForBlockedUrls);
 	$("#challengeLen").val(genOptions.challengeLen);
@@ -459,7 +459,7 @@ function persistGeneralOptions(challengeLen)
 		"maxMinutesForBlockedUrls" : $("#maxMinutesForBlockedUrls").val(),
 		"showBlockedURLs" : $("input[name='showBlockedURLs']:checked").val() == "showURLs",
 		"challengeLen" : challengeLen
-		
+
 	};
 	storeGeneralOptions(genOptions);
 	chrome.extension.getBackgroundPage().BackGroundManager.setGenOptions(genOptions);
@@ -470,19 +470,19 @@ function performConfirmSuccessOpn()
 {
 	var operationToDo = $("#operationToPerform").val();
 	var operand = $("#operandVal").val();
-	
+
 	if(operationToDo == 'B')
 	{
 		deleteBlockSet(operand);
 		populateBlockSets();
 	}
-	
+
 	if(operationToDo == 'W')
 	{
 		deleteWhiteListedUrl(operand);
 		populateWhiteListedUrls();
 	}
-	
+
 	if(operationToDo == 'T')
 	{
 		deleteTag(operand);
@@ -505,13 +505,13 @@ function performConfirmCancel()
 {
 	var operationToDo = $("#operationToPerform").val();
 	var operand = $("#operandVal").val();
-	
+
 	if(operationToDo == 'C')
 	{
 		var oldGenOptions = getGeneralOptions()
 		$("#challengeLen").val(oldGenOptions.challengeLen);
 	}
-	
+
 	$("#operationToPerform").val("");
 	$("#operandVal").val("");
 	$("#confirmMessage").html("");
@@ -530,14 +530,14 @@ function setupConfirmMessageDialog()
 		autoOpen:false,
 		title:'Confirm',
 		overlay: { opacity: 0.5, background: 'black'},
-		buttons: { 
+		buttons: {
 			"OK !": function() {
 				$(this).dialog("close");
 				performConfirmSuccessOpn();
-				
+
 			},
 			"Cancel !" : function(){
-				$(this).dialog("close"); 
+				$(this).dialog("close");
 				performConfirmCancel();
 			}
 		}
@@ -558,7 +558,7 @@ function saveGeneralOptions()
 	var krakenTxt = "You have reduced the challenge text's length ! This might make it easier to bypass Chrome Nanny - Do you want to continue ? If you click 'Cancel', the challenge length will be reverted to previous value. If you click 'OK', Chrome Nanny will unleash the Kraken !";
 	if(!validateGeneralOptions())
 		return;
-	
+
 	var oldGenOptions = getGeneralOptions();
 	var challengeLength = parseInt($("#challengeLen").val());
 	var oldChallengeLength = parseInt(oldGenOptions.challengeLen);
@@ -583,9 +583,9 @@ function validateGeneralOptions()
 		alert('Please enter a number >= 5 !');
 		return false;
 	}
-	
+
 	var maxMinutesForBlockedUrls= $("#maxMinutesForBlockedUrls").val();
-	if(!isValidMinuteInterval(maxMinutesForBlockedUrls)) 
+	if(!isValidMinuteInterval(maxMinutesForBlockedUrls))
 	{
 		$('#maxMinutesForBlockedUrls').focus();
 		alert('Please enter a number between 0 and 1440 !');
@@ -602,11 +602,11 @@ function validateGeneralOptions()
 			alert('Please enter a redirect url ');
 			return false;
 		}
-		
+
 		var allWhiteListedUrls = chrome.extension.getBackgroundPage().BackGroundManager.whiteList;
 		if(checkIfInArrayRegExp(redirectUrl, allWhiteListedUrls) !== false)
 			return true;
-		
+
 		var allBlockListUrls = chrome.extension.getBackgroundPage().BackGroundManager.blockList;
 		if(checkIfInArrayRegExp(redirectUrl, allBlockListUrls) !== false)
 		{
@@ -639,7 +639,7 @@ function updateTagsInOtherTabs(allTags)
 
 function addTagToWhiteListDiv()
 {
-	var tagName = $('#whiteListAllTags').val();	
+	var tagName = $('#whiteListAllTags').val();
 	if(tagName == null)
 	{
 		alert('Please retry after adding new tags in the Tags tab');
@@ -649,7 +649,7 @@ function addTagToWhiteListDiv()
 		return;
 	appendItemToUl('#whiteListTagsUl', tagName);
 }
-	
+
 function checkIfTagPresentInList(ulFieldId,tagName)
 {
 	var isAlreadyPresentInUL = false;
@@ -670,7 +670,7 @@ function setupDialog()
 		autoOpen:false,
 		title:'What is the airspeed velocity of an unladen swallow?',
 		overlay: { opacity: 0.5, background: 'black'},
-		buttons: { 
+		buttons: {
 			"Allow Me !": function() {
 				if(verifyChallenge())
 				{
@@ -678,16 +678,16 @@ function setupDialog()
 					var tempEditOrDelete = $("#editOrDeleteBlockSet").val();
 					$("#dialogBlockSet").val("");
 					$("#editOrDeleteBlockSet").val("");
-					if(tempEditOrDelete == 'E')	
+					if(tempEditOrDelete == 'E')
 						handleEditBlockSet(tempBlockSetName);
-					if(tempEditOrDelete == 'D')	
+					if(tempEditOrDelete == 'D')
 						handleDeleteBlockSet(tempBlockSetName);
 
 					$("#userEnteredText").val("");
 					$(this).dialog("close");
 
 					//If option is O , then tempBlockSetName holds the new challenge length
-					if(tempEditOrDelete == 'O')	
+					if(tempEditOrDelete == 'O')
 						persistGeneralOptions(tempBlockSetName);
 
 				}
@@ -707,7 +707,7 @@ function setupDialog()
 					$("#challengeLen").val(oldGenOptions.challengeLen);
 				}
 				$("#editOrDeleteBlockSet").val("");
-				$(this).dialog("close"); 
+				$(this).dialog("close");
 			}
 		}
 	});
@@ -771,7 +771,7 @@ function validateRegExp()
 		$("#errorResultSpan").html(e.message);
 	}
 	if(!isRegExpValid) return;
-		
+
 	$("#errorResultSpan").html("No error in Regular Expression");
 
 
@@ -809,9 +809,11 @@ function populateLockDown()
 	if(!isIntervalSet)
 	{
 		isIntervalSet = true;
-		optionIntervalTimerId = setInterval('refreshLockDownDtls()', 60 * 1000); //1 minute
+		optionIntervalTimerId = setInterval( function() {
+			refreshLockDownDtls();
+		}, 60 * 1000); //1 minute
 	}
-	
+
 	refreshLockDownDtls();
 
 	$.each(new Array(0,1,2,3,4,5,6,10,12,18,24),function(k,v){dtlsStr += '<option value="' + v + '">' + v + '</option>';});
@@ -821,8 +823,8 @@ function populateLockDown()
 	for(i=0;i<=55;i+=5)
 		dtlsStr += '<option value="' + i + '">' + i + '</option>';
 	$("select#lockDownMins").html(dtlsStr);
-		
-	
+
+
 	dtlsStr = "";
 	allBlockSets = allBlockSets.sort(sortBlockSetsBasedOnName);
         $.each(allBlockSets, function(key, blockSetName){
@@ -836,11 +838,11 @@ function populateLockDown()
 function getLockDownInfoText()
 {
 	var lockDownDtls = getLockDownDtls();
-	
+
 	var dtlsStr = "";
 	if(!isLockDownActive(lockDownDtls))
 	{
-		dtlsStr = "No lockdown is active currently";	
+		dtlsStr = "No lockdown is active currently";
 	}
 	else
 	{
@@ -856,7 +858,7 @@ function getLockDownInfoText()
 			lockDownBlockSetNames.push(blockSetDtls.name);
 			console.log(blockSetDtls.name);
 		});
-		dtlsStr = "A lockdown is active for blockset(s) \"" + lockDownBlockSetNames.join(",") +  "\" till " + d.toLocaleString();	
+		dtlsStr = "A lockdown is active for blockset(s) \"" + lockDownBlockSetNames.join(",") +  "\" till " + d.toLocaleString();
 	}
 	return dtlsStr;
 }
@@ -866,13 +868,13 @@ function refreshLockDownDtls()
 	var lockDownDtls = getLockDownDtls();
 	if(!isLockDownActive(lockDownDtls))
 	{
-		$("#beginLockDownBtn").attr("disabled",false)	
+		$("#beginLockDownBtn").attr("disabled",false)
 		if(lockDownDtls != null)
 			storeLockDownDtls(null);
 	}
 	else
 	{
-		$("#beginLockDownBtn").attr("disabled",true)	
+		$("#beginLockDownBtn").attr("disabled",true)
 	}
 
 	var dtlsStr = getLockDownInfoText();
@@ -917,13 +919,13 @@ function validateLockDown()
 		if(this.checked)
 			numItemsSelected += 1;
 	});
-	
+
 	if(numItemsSelected == 0)
 	{
 		alert('Please select atleast one blockset for blocking !');
 		return false;
 	}
-	
+
 	if($("#lockDownHrs").val() == 0  && $("#lockDownMins").val() == 0)
 	{
 		alert('Please select a non empty chunk of time to block !');
@@ -943,7 +945,7 @@ function beginLockDown()
 {
 	if(!validateLockDown())
 		return;
-	
+
 	var blockSetsToLock = new Array();
 	$("input[name='lockDownBlockSets\[\]']").each(function(){
 		if(this.checked)
@@ -960,5 +962,3 @@ function beginLockDown()
 	storeLockDownDtls(lockDownDtls);
 	refreshLockDownDtls();
 }
-
-

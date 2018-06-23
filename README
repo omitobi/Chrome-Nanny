@@ -1,1 +1,8 @@
+#### Nanny for Google Chrome
 This project contains the code for Chrome Nanny.
+
+#### Warning
+
+https://developer.chrome.com/extensions/contentSecurityPolicy#relaxing-eval
+
+> However, we strongly recommend against doing this. These functions are notorious XSS attack vectors.

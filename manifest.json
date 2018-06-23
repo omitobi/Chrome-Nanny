@@ -5,7 +5,7 @@
 	"background": {
 		"page": "background.html",
 		"persistent": false
-	}
+	},
 	"options_page": "options.html",
   	"permissions": ["tabs"] ,
 	"browser_action": {
